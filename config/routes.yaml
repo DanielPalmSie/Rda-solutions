@@ -1,0 +1,8 @@
+api_auth_login:
+    path: /api/user/login
+    methods:  [POST]
+
+api:
+    prefix: /api
+    resource: '../src/Controller/Api'
+
