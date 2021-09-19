@@ -93,7 +93,12 @@ class ApiTransferController extends AbstractController
             }
 
         } else {
-            throw new \HttpException(500, 'your balance less then amount');
+            return new JsonResponse(
+                [
+                    'message' => 'your balance less then amount',
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         return new JsonResponse(
