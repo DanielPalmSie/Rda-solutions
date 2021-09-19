@@ -4,9 +4,13 @@ namespace App\Controller\Api;
 
 use App\Entity\TransactionHistoryLogs;
 use App\Entity\User;
+use App\Model\TransactionListOut;
+use App\Model\UserShortOut;
 use AutoMapperPlus\AutoMapperInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -91,6 +95,26 @@ class ApiTransferController extends AbstractController
         } else {
             throw new \HttpException(500, 'your balance less then amount');
         }
+
+        return new JsonResponse(
+            [
+                'message' => 'transaction was successful',
+            ],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * @Route("/transactions/by-user", name="get_transactions_by_user", methods={"GET"})
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getTransactionsListByUser()
+    {
+        $transactions = $this->logsRepository->getTransactionsByUser($this->getUser());
+
+        $transactionsOut = $this->autoMapper->mapMultiple($transactions, TransactionListOut::class);
+
+        return $this->json($transactionsOut);
     }
 
 }

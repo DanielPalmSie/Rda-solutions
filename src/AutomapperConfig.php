@@ -2,13 +2,15 @@
 
 namespace App;
 
+use App\Entity\TransactionHistoryLogs;
 use App\Entity\User;
-use App\Model\UserInModel;
+use App\Model\TransactionListOut;
 use App\Model\UserOutModel;
+use App\Model\UserShortOut;
 use App\Utils\EmailSecurityConvertor;
 use AutoMapperPlus\AutoMapperPlusBundle\AutoMapperConfiguratorInterface;
 use AutoMapperPlus\Configuration\AutoMapperConfigInterface;
-use FOS\UserBundle\Model;
+use AutoMapperPlus\MappingOperation\Operation;
 
 class AutomapperConfig implements AutoMapperConfiguratorInterface
 {
@@ -24,6 +26,7 @@ class AutomapperConfig implements AutoMapperConfiguratorInterface
     public function configure(AutoMapperConfigInterface $config): void
     {
         $this->configureUser($config);
+        $this->configureTransaction($config);
     }
 
     /**
@@ -35,5 +38,13 @@ class AutomapperConfig implements AutoMapperConfiguratorInterface
             ->forMember('email', function (User $user) {
                 return $this->emailConvertor->convertMail($user->getEmail());
             });
+
+        $config->registerMapping(User::class, UserShortOut::class);
+    }
+
+    public function configureTransaction(AutoMapperConfigInterface $config): void
+    {
+        $config->registerMapping(TransactionHistoryLogs::class, TransactionListOut::class)
+            ->forMember('user', Operation::mapTo(UserShortOut::class));
     }
 }

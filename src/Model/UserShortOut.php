@@ -8,21 +8,10 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * @SWG\Definition()
  */
-class UserOutModel
+class UserShortOut
 {
     /**
      * @Serializer\Type("string")
      */
     public $username;
-
-    /**
-     * @Serializer\Type("string")
-     */
-    public $email;
-
-    /**
-     * @Serializer\Type("integer")
-     */
-    public $balance;
-
 }

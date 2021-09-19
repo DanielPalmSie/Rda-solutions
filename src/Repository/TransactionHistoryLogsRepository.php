@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\TransactionHistoryLogs;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -17,6 +18,19 @@ class TransactionHistoryLogsRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TransactionHistoryLogs::class);
+    }
+
+
+    public function getTransactionsByUser(User $user)
+    {
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('t')
+            ->from($this->getEntityName(), 't')
+            ->where('t.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
     // /**
